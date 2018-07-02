@@ -12,30 +12,50 @@ import {
   View,
   StatusBar,
   TextInput,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native';
+
+import Todo from "./ToDo"
+
 
 const { height, width } = Dimensions.get("window")
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+
 
 type Props = {};
 export default class App extends Component<Props> {
+  state = {
+    newTodo: ""
+  }
   render() {
+    const { newTodo } = this.state
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content"/>
         <Text style={styles.title}>This is To Do</Text>
         <View style={styles.card}>
-          <TextInput style={styles.input} placeholder={"New To Do"}/>
+          <TextInput 
+            style={styles.input} 
+            value={newTodo}
+            onChangeText={this._controlNewTodo}
+            placeholder={"New To Do"}
+            placeholderTextColor={"#999"}
+            returnKeyType={"done"}
+            autoCorrect={false} //키보드 자동수정방지
+          />
+          <ScrollView contentContainerStyle={styles.toDos}>
+            <Todo />
+          </ScrollView>
         </View>
       </View>
     );
+  }
+
+  _controlNewTodo = text => {
+    this.setState({
+      newTodo: text
+    })
   }
 }
 
@@ -74,6 +94,15 @@ const styles = StyleSheet.create({
         elevation: 3
       }
     })
+  },
+  input: {
+    padding: 30,
+    borderBottomColor: "#bbb",
+    borderBottomWidth: 1,
+    fontSize: 25
+  },
+  toDos: {
+    alignItems: "center"
   }
   
 });
